@@ -15,10 +15,11 @@
   --font-display: var(--font-serif, 'Instrument Serif'), Georgia, serif;
 }
 
+/* Só box-sizing aqui. O reset de margin e padding fica por conta do preflight
+   do Tailwind, que vive em @layer. Um reset sem layer mataria as utilities de
+   spacing (padding e margin) porque regras fora de layer vencem as de dentro. */
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html {

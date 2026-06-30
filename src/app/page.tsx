@@ -78,6 +78,7 @@ export default function Home() {
       if (!reduce) {
         const Lenis = (await import('lenis')).default;
         lenis = new Lenis({ duration: 1.1 });
+        (window as unknown as { __lenis?: unknown }).__lenis = lenis;
         const loop = (t: number) => {
           lenis?.raf(t);
           raf = requestAnimationFrame(loop);
@@ -119,7 +120,7 @@ export default function Home() {
       </header>
 
       {/* ===== HERO ===== */}
-      <section className="min-h-[100svh] flex items-center px-5 sm:px-8 pt-28 pb-16 max-w-[1280px] mx-auto">
+      <section className="lg:min-h-[100svh] flex flex-col justify-center px-5 sm:px-8 pt-28 pb-12 lg:pb-16 max-w-[1280px] mx-auto">
         <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-16 items-center w-full">
           {/* texto */}
           <div>
@@ -158,16 +159,15 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* marquee mobile (horizontal) */}
-      <div className="lg:hidden overflow-hidden fade-mask-x pb-6 -mt-4">
-        <div className="marquee-track">
-          {[...projects, ...projects].map((p, i) => (
-            <ProjectCard key={`m${i}`} p={p} w={210} h={262} eager={i < 2} />
-          ))}
+        {/* marquee mobile (horizontal), dentro do hero */}
+        <div className="lg:hidden overflow-hidden fade-mask-x mt-12">
+          <div className="marquee-track">
+            {[...projects, ...projects].map((p, i) => (
+              <ProjectCard key={`m${i}`} p={p} w={210} h={262} eager={i < 2} />
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* ===== STATEMENT (a tese) ===== */}
       <section className="px-5 sm:px-8 py-24 sm:py-36 border-t border-[var(--line-soft)]">
