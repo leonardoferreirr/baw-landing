@@ -93,7 +93,7 @@ a {
   display: flex;
   gap: 1.25rem;
   width: max-content;
-  animation: marquee-x 38s linear infinite;
+  animation: marquee-x 120s linear infinite;
 }
 @keyframes marquee-x {
   from {
@@ -108,17 +108,28 @@ a {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  animation: marquee-y 32s linear infinite;
 }
-.marquee-col.slow {
-  animation-duration: 44s;
+/* Esquerda sobe, direita desce, mesma duração = mesma velocidade. */
+.marquee-col.up {
+  animation: marquee-up 90s linear infinite;
 }
-@keyframes marquee-y {
+.marquee-col.down {
+  animation: marquee-down 90s linear infinite;
+}
+@keyframes marquee-up {
   from {
     transform: translateY(0);
   }
   to {
     transform: translateY(-50%);
+  }
+}
+@keyframes marquee-down {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0);
   }
 }
 
@@ -136,20 +147,6 @@ a {
   height: 100%;
   object-fit: cover;
 }
-.project-card .tag {
-  position: absolute;
-  left: 12px;
-  bottom: 12px;
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(6px);
-  padding: 0.3rem 0.7rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
 /* fade nas bordas do marquee */
 .fade-mask-y {
   -webkit-mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
@@ -174,7 +171,7 @@ a {
 @media (prefers-reduced-motion: reduce) {
   .marquee-track,
   .marquee-col {
-    animation: none;
+    animation: none !important;
   }
   .reveal {
     opacity: 1;

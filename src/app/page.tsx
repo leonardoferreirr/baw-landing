@@ -3,16 +3,23 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 
-const projects = [
-  { src: '/cases/neuromov-1.jpg', tag: 'Neuromov · Pilates' },
-  { src: '/cases/gabriel-1.jpg', tag: 'Gabriel Carneiro · Personal' },
-  { src: '/cases/joaopaulo-1.jpg', tag: 'João Paulo · Fisio' },
-  { src: '/cases/neuromov-2.jpg', tag: 'Neuromov · Pilates' },
-  { src: '/cases/gabriel-2.jpg', tag: 'Gabriel Carneiro · Personal' },
-  { src: '/cases/joaopaulo-2.jpg', tag: 'João Paulo · Fisio' },
-  { src: '/cases/neuromov-3.jpg', tag: 'Neuromov · Pilates' },
-  { src: '/cases/gabriel-3.jpg', tag: 'Gabriel Carneiro · Personal' },
-];
+const neuromov = Array.from({ length: 11 }, (_, i) => `/cases/neuromov-${String(i + 1).padStart(2, '0')}.jpg`);
+const gabriel = Array.from({ length: 12 }, (_, i) => `/cases/gabriel-${String(i + 1).padStart(2, '0')}.jpg`);
+const joaopaulo = Array.from({ length: 7 }, (_, i) => `/cases/joaopaulo-${String(i + 1).padStart(2, '0')}.jpg`);
+
+function altFor(src: string) {
+  if (src.includes('neuromov')) return 'Marca Neuromov aplicada';
+  if (src.includes('gabriel')) return 'Marca Gabriel Carneiro aplicada';
+  return 'Marca João Paulo Alves aplicada';
+}
+
+// Intercala os 3 projetos pra não agrupar fotos da mesma marca em sequência.
+const projects: { src: string; alt: string }[] = [];
+for (let i = 0; i < Math.max(neuromov.length, gabriel.length, joaopaulo.length); i++) {
+  for (const list of [neuromov, gabriel, joaopaulo]) {
+    if (list[i]) projects.push({ src: list[i], alt: altFor(list[i]) });
+  }
+}
 
 const colA = projects.filter((_, i) => i % 2 === 0);
 const colB = projects.filter((_, i) => i % 2 === 1);
@@ -54,7 +61,7 @@ function ProjectCard({
   h,
   eager,
 }: {
-  p: { src: string; tag: string };
+  p: { src: string; alt: string };
   w: number;
   h: number;
   eager?: boolean;
@@ -62,8 +69,7 @@ function ProjectCard({
   return (
     <div className="project-card" style={{ width: w, height: h }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={p.src} alt={p.tag} loading={eager ? 'eager' : 'lazy'} />
-      <span className="tag">{p.tag}</span>
+      <img src={p.src} alt={p.alt} loading={eager ? 'eager' : 'lazy'} />
     </div>
   );
 }
@@ -147,12 +153,12 @@ export default function Home() {
 
           {/* marquee desktop (vertical) */}
           <div className="hidden lg:flex gap-5 h-[78vh] max-h-[680px] overflow-hidden fade-mask-y justify-center">
-            <div className="marquee-col">
+            <div className="marquee-col up">
               {[...colA, ...colA].map((p, i) => (
                 <ProjectCard key={`a${i}`} p={p} w={252} h={310} eager={i < 2} />
               ))}
             </div>
-            <div className="marquee-col slow" style={{ marginTop: '-60px' }}>
+            <div className="marquee-col down">
               {[...colB, ...colB].map((p, i) => (
                 <ProjectCard key={`b${i}`} p={p} w={252} h={310} eager={i < 2} />
               ))}
@@ -244,9 +250,9 @@ export default function Home() {
           </p>
           <div className="grid sm:grid-cols-3 gap-5">
             {[
-              { src: '/cases/neuromov-3.jpg', nome: 'Neuromov', tipo: 'Fisioterapia e Pilates' },
-              { src: '/cases/gabriel-1.jpg', nome: 'Gabriel Carneiro', tipo: 'Personal Trainer' },
-              { src: '/cases/joaopaulo-2.jpg', nome: 'João Paulo Alves', tipo: 'Fisioterapeuta' },
+              { src: '/cases/neuromov-10.jpg', nome: 'Neuromov', tipo: 'Fisioterapia e Pilates' },
+              { src: '/cases/gabriel-01.jpg', nome: 'Gabriel Carneiro', tipo: 'Personal Trainer' },
+              { src: '/cases/joaopaulo-04.jpg', nome: 'João Paulo Alves', tipo: 'Fisioterapeuta' },
             ].map((c, i) => (
               <div key={i} className="reveal" style={{ transitionDelay: `${i * 80}ms` }}>
                 <div className="project-card" style={{ aspectRatio: '4/5', width: '100%' }}>
