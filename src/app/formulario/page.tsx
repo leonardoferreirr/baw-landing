@@ -74,6 +74,25 @@ const QUESTIONS: Q[] = [
   },
 ];
 
+const COUNTRIES = [
+  { code: 'BR', flag: '🇧🇷', dial: '+55', name: 'Brasil' },
+  { code: 'PT', flag: '🇵🇹', dial: '+351', name: 'Portugal' },
+  { code: 'US', flag: '🇺🇸', dial: '+1', name: 'EUA' },
+  { code: 'AR', flag: '🇦🇷', dial: '+54', name: 'Argentina' },
+  { code: 'CL', flag: '🇨🇱', dial: '+56', name: 'Chile' },
+  { code: 'CO', flag: '🇨🇴', dial: '+57', name: 'Colômbia' },
+  { code: 'MX', flag: '🇲🇽', dial: '+52', name: 'México' },
+  { code: 'ES', flag: '🇪🇸', dial: '+34', name: 'Espanha' },
+];
+
+// Máscara BR: (XX) XXXXX-XXXX
+function formatBR(digits: string) {
+  const d = digits.replace(/\D/g, '').slice(0, 11);
+  if (d.length <= 2) return d ? `(${d}` : '';
+  if (d.length <= 7) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+}
+
 export default function Formulario() {
   const [started, setStarted] = useState(false);
   const [step, setStep] = useState(0);
@@ -81,15 +100,34 @@ export default function Formulario() {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
+  const [country, setCountry] = useState(COUNTRIES[0]);
+  const [phoneDigits, setPhoneDigits] = useState('');
 
   const q = QUESTIONS[step];
   const total = QUESTIONS.length;
   const isLast = step === total - 1;
   const current = (q && answers[q.id]) || '';
-  const canAdvance = current.trim().length > 0;
+
+  // Só avança se o campo atual for válido. Todos obrigatórios.
+  function fieldValid(): boolean {
+    if (!q) return false;
+    if (q.kind === 'choice') return !!answers[q.id];
+    if (q.id === 'whatsapp') {
+      return country.code === 'BR' ? phoneDigits.length === 11 : phoneDigits.length >= 8;
+    }
+    if (q.id === 'instagram') return current.trim().replace(/^@/, '').length >= 2;
+    return current.trim().length >= 2;
+  }
+  const canAdvance = fieldValid();
 
   function set(id: string, val: string) {
     setAnswers((a) => ({ ...a, [id]: val }));
+  }
+
+  function setPhone(input: string, c = country) {
+    const d = input.replace(/\D/g, '').slice(0, c.code === 'BR' ? 11 : 15);
+    setPhoneDigits(d);
+    set('whatsapp', `${c.dial} ${c.code === 'BR' ? formatBR(d) : d}`.trim());
   }
 
   async function submit() {
@@ -208,10 +246,48 @@ export default function Formulario() {
                       );
                     })}
                   </div>
+                ) : q.kind === 'tel' ? (
+                  <div>
+                    <div className="flex items-center gap-2 border-b border-[var(--line)] focus-within:border-[var(--purple)] transition-colors">
+                      <select
+                        aria-label="País"
+                        value={country.code}
+                        onChange={(e) => {
+                          const c = COUNTRIES.find((x) => x.code === e.target.value) || COUNTRIES[0];
+                          setCountry(c);
+                          setPhone(phoneDigits, c);
+                        }}
+                        className="bg-transparent py-3 pr-1 text-[1.2rem] outline-none cursor-pointer text-[var(--fg)]"
+                      >
+                        {COUNTRIES.map((c) => (
+                          <option key={c.code} value={c.code} className="bg-[var(--bg)] text-[var(--fg)]">
+                            {c.flag} {c.dial}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        autoFocus
+                        type="tel"
+                        inputMode="numeric"
+                        value={country.code === 'BR' ? formatBR(phoneDigits) : phoneDigits}
+                        placeholder={country.code === 'BR' ? '(11) 99999-9999' : 'DDD + número'}
+                        onChange={(e) => setPhone(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') next();
+                        }}
+                        className="flex-1 bg-transparent outline-none text-[1.4rem] py-3 placeholder:text-[var(--fg-faint)]"
+                      />
+                    </div>
+                    {phoneDigits.length > 0 && !canAdvance && (
+                      <p className="mt-3 text-[0.9rem] text-[#ff8f8f]">
+                        Digite o número completo com DDD.
+                      </p>
+                    )}
+                  </div>
                 ) : (
                   <input
                     autoFocus
-                    type={q.kind === 'tel' ? 'tel' : 'text'}
+                    type="text"
                     value={current}
                     placeholder={q.placeholder}
                     onChange={(e) => set(q.id, e.target.value)}
