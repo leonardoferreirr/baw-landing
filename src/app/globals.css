@@ -34,7 +34,7 @@ body {
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.55;
-  overflow-x: hidden;
+  overflow-x: clip; /* clip (não hidden) pra não quebrar position: sticky */
   letter-spacing: -0.01em;
 }
 
@@ -111,10 +111,10 @@ a {
 }
 /* Esquerda sobe, direita desce, mesma duração = mesma velocidade. */
 .marquee-col.up {
-  animation: marquee-up 90s linear infinite;
+  animation: marquee-up 45s linear infinite;
 }
 .marquee-col.down {
-  animation: marquee-down 90s linear infinite;
+  animation: marquee-down 45s linear infinite;
 }
 @keyframes marquee-up {
   from {
@@ -155,6 +155,16 @@ a {
 .fade-mask-x {
   -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
   mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+/* sticky stack: cards empilham e compactam conforme o scroll */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.stack-card {
+  position: sticky;
 }
 
 /* reveal on scroll */

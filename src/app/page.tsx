@@ -74,6 +74,15 @@ function ProjectCard({
   );
 }
 
+function CtaPosicionar({ size = 'md' }: { size?: 'md' | 'lg' }) {
+  return (
+    <Link href="/formulario" className={`btn ${size === 'lg' ? '!text-[1.05rem] !py-4 !px-9' : ''}`}>
+      Quero me posicionar
+      <span aria-hidden>→</span>
+    </Link>
+  );
+}
+
 export default function Home() {
   useEffect(() => {
     // smooth scroll
@@ -131,9 +140,7 @@ export default function Home() {
           {/* texto */}
           <div>
             <h1 className="serif text-[2.7rem] leading-[1.05] sm:text-[3.6rem] lg:text-[4.2rem]">
-              Você é ótimo no que faz.
-              <br />
-              Sua marca não conta isso.
+              Você é ótimo no que faz. Sua marca não conta isso.
             </h1>
             <p className="mt-7 text-[1.08rem] sm:text-[1.18rem] text-[var(--fg-dim)] max-w-[34rem] leading-[1.6]">
               BAW é branding feito só para quem é de saúde e bem-estar. Eu defino o seu
@@ -182,6 +189,9 @@ export default function Home() {
             O desafio não é criar uma marca bonita. É definir o posicionamento certo pra você ser
             lembrado pelo público certo. <span className="text-[var(--fg-faint)]">E só depois pensar na identidade visual.</span>
           </p>
+          <div className="mt-10">
+            <CtaPosicionar />
+          </div>
         </div>
       </section>
 
@@ -210,6 +220,9 @@ export default function Home() {
               </p>
             </div>
           </div>
+          <div className="mt-12 reveal">
+            <CtaPosicionar />
+          </div>
         </div>
       </section>
 
@@ -222,20 +235,25 @@ export default function Home() {
             depois a identidade visual.
           </p>
         </div>
-        <div className="grid sm:grid-cols-2 gap-5">
+        <div className="stack max-w-[820px] mx-auto">
           {fases.map((f, i) => (
-            <div
+            <article
               key={f.n}
-              className="border border-[var(--line)] rounded-2xl p-8 reveal hover:border-[var(--purple)] transition-colors duration-300"
-              style={{ transitionDelay: `${i * 70}ms` }}
+              className="stack-card bg-[#141414] border border-[var(--line)] rounded-3xl p-8 sm:p-11 shadow-[0_-8px_40px_rgba(0,0,0,0.5)]"
+              style={{ top: `calc(96px + ${i} * 16px)`, zIndex: i + 1 }}
             >
               <div className="flex items-baseline gap-3 mb-4">
-                <span className="serif text-[var(--purple)] text-[1.5rem]">{f.n}</span>
-                <h3 className="serif text-[1.8rem]">{f.nome}</h3>
+                <span className="serif text-[var(--purple)] text-[1.6rem]">{f.n}</span>
+                <h3 className="serif text-[2rem]">{f.nome}</h3>
               </div>
-              <p className="text-[1.02rem] text-[var(--fg-dim)] leading-[1.55]">{f.desc}</p>
-            </div>
+              <p className="text-[1.05rem] sm:text-[1.12rem] text-[var(--fg-dim)] leading-[1.6]">
+                {f.desc}
+              </p>
+            </article>
           ))}
+        </div>
+        <div className="mt-16 text-center reveal">
+          <CtaPosicionar />
         </div>
       </section>
 
@@ -248,42 +266,29 @@ export default function Home() {
           <p className="text-[1.02rem] text-[var(--fg-dim)] mb-12 reveal">
             Profissionais de saúde reais, com marca de verdade. Nada de logo de Canva.
           </p>
-          <div className="grid sm:grid-cols-3 gap-5">
+          <div className="stack max-w-[860px] mx-auto">
             {[
               { src: '/cases/neuromov-10.jpg', nome: 'Neuromov', tipo: 'Fisioterapia e Pilates' },
-              { src: '/cases/gabriel-01.jpg', nome: 'Gabriel Carneiro', tipo: 'Personal Trainer' },
+              { src: '/cases/gabriel-09.jpg', nome: 'Gabriel Carneiro', tipo: 'Personal Trainer' },
               { src: '/cases/joaopaulo-04.jpg', nome: 'João Paulo Alves', tipo: 'Fisioterapeuta' },
             ].map((c, i) => (
-              <div key={i} className="reveal" style={{ transitionDelay: `${i * 80}ms` }}>
-                <div className="project-card" style={{ aspectRatio: '4/5', width: '100%' }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={c.src} alt={`${c.nome} — ${c.tipo}`} loading="lazy" />
+              <article
+                key={i}
+                className="stack-card project-card shadow-[0_-8px_40px_rgba(0,0,0,0.5)]"
+                style={{ top: `calc(96px + ${i} * 16px)`, zIndex: i + 1, aspectRatio: '4/3', width: '100%' }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={c.src} alt={`${c.nome} — ${c.tipo}`} loading="lazy" />
+                <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8 bg-gradient-to-t from-black/85 via-black/40 to-transparent">
+                  <h3 className="serif text-[1.7rem] sm:text-[2rem]">{c.nome}</h3>
+                  <p className="text-[0.98rem] text-[var(--fg-dim)]">{c.tipo}</p>
                 </div>
-                <h3 className="mt-4 text-[1.15rem] font-medium">{c.nome}</h3>
-                <p className="text-[0.95rem] text-[var(--fg-faint)]">{c.tipo}</p>
-              </div>
+              </article>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ===== SOBRE ===== */}
-      <section className="px-5 sm:px-8 py-24 sm:py-32 max-w-[900px] mx-auto reveal">
-        <h2 className="serif text-[2rem] sm:text-[2.8rem] leading-[1.15] mb-7">
-          Por que comigo
-        </h2>
-        <div className="space-y-5 text-[1.08rem] text-[var(--fg-dim)] leading-[1.65]">
-          <p>
-            Sou o Leonardo. Não sou um designer que também pega academia. Eu trabalho só com
-            branding para saúde e bem-estar, porque um nutricionista não quer um designer qualquer,
-            quer alguém que entenda por que o paciente escolhe um profissional e não outro.
-          </p>
-          <p>
-            Penso a marca, o funil, o conteúdo e a venda juntos, com método de verdade por trás, não
-            achismo. No wellness, confiança é a moeda. O paciente entrega o corpo, a dor, a cabeça.
-            Ele compra confiança antes de comprar técnica, e a sua marca é onde essa confiança
-            começa.
-          </p>
+          <div className="mt-16 text-center reveal">
+            <CtaPosicionar />
+          </div>
         </div>
       </section>
 
@@ -291,19 +296,14 @@ export default function Home() {
       <section className="px-5 sm:px-8 py-24 sm:py-36 border-t border-[var(--line-soft)] text-center">
         <div className="max-w-[760px] mx-auto reveal">
           <h2 className="serif text-[2.6rem] sm:text-[4rem] leading-[1.08]">
-            Primeiro o lugar na mente.
-            <br />
-            Só depois a identidade visual.
+            Primeiro o lugar na mente. Só depois a identidade visual.
           </h2>
           <p className="mt-6 text-[1.1rem] text-[var(--fg-dim)] max-w-[34rem] mx-auto">
             Preencha a aplicação. Em 2 minutos eu entendo o seu momento e vejo se o seu projeto é um
             dos poucos que eu pego por mês.
           </p>
           <div className="mt-10">
-            <Link href="/formulario" className="btn !text-[1.05rem] !py-4 !px-9">
-              Iniciar aplicação
-              <span aria-hidden>→</span>
-            </Link>
+            <CtaPosicionar size="lg" />
           </div>
         </div>
       </section>
