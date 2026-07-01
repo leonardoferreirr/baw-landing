@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 const neuromov = Array.from({ length: 11 }, (_, i) => `/cases/neuromov-${String(i + 1).padStart(2, '0')}.jpg`);
@@ -55,21 +56,10 @@ const fases = [
   },
 ];
 
-function ProjectCard({
-  p,
-  w,
-  h,
-  eager,
-}: {
-  p: { src: string; alt: string };
-  w: number;
-  h: number;
-  eager?: boolean;
-}) {
+function ProjectCard({ p, w, h }: { p: { src: string; alt: string }; w: number; h: number }) {
   return (
     <div className="project-card" style={{ width: w, height: h }}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={p.src} alt={p.alt} loading={eager ? 'eager' : 'lazy'} />
+      <Image src={p.src} alt={p.alt} fill sizes="(max-width: 1024px) 210px, 252px" style={{ objectFit: 'cover' }} />
     </div>
   );
 }
@@ -163,12 +153,12 @@ export default function Home() {
           <div className="hidden lg:flex gap-5 h-[78vh] max-h-[680px] overflow-hidden fade-mask-y justify-center">
             <div className="marquee-col up">
               {[...colA, ...colA].map((p, i) => (
-                <ProjectCard key={`a${i}`} p={p} w={252} h={310} eager={i < 2} />
+                <ProjectCard key={`a${i}`} p={p} w={252} h={310} />
               ))}
             </div>
             <div className="marquee-col down">
               {[...colB, ...colB].map((p, i) => (
-                <ProjectCard key={`b${i}`} p={p} w={252} h={310} eager={i < 2} />
+                <ProjectCard key={`b${i}`} p={p} w={252} h={310} />
               ))}
             </div>
           </div>
@@ -177,7 +167,7 @@ export default function Home() {
         <div className="lg:hidden overflow-hidden fade-mask-x mt-12">
           <div className="marquee-track">
             {[...projects, ...projects].map((p, i) => (
-              <ProjectCard key={`m${i}`} p={p} w={210} h={262} eager={i < 2} />
+              <ProjectCard key={`m${i}`} p={p} w={210} h={262} />
             ))}
           </div>
         </div>
@@ -278,8 +268,7 @@ export default function Home() {
                 className="stack-card project-card shadow-[0_-8px_40px_rgba(0,0,0,0.5)]"
                 style={{ top: `calc(96px + ${i} * 16px)`, zIndex: i + 1, aspectRatio: '4/3', width: '100%' }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={c.src} alt={`${c.nome} — ${c.tipo}`} loading="lazy" />
+                <Image src={c.src} alt={`${c.nome} — ${c.tipo}`} fill sizes="(max-width: 1024px) 92vw, 860px" style={{ objectFit: 'cover' }} />
                 <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8 bg-gradient-to-t from-black/85 via-black/40 to-transparent">
                   <h3 className="serif text-[1.7rem] sm:text-[2rem]">{c.nome}</h3>
                   <p className="text-[0.98rem] text-[var(--fg-dim)]">{c.tipo}</p>
