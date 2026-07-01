@@ -140,7 +140,8 @@ export default function Home() {
           {/* texto */}
           <div>
             <h1 className="serif text-[2.7rem] leading-[1.05] sm:text-[3.6rem] lg:text-[4.2rem]">
-              Você é ótimo no que faz. Sua marca não conta isso.
+              Você é ótimo no que faz. Sua marca só não conta isso{' '}
+              <span className="text-[var(--purple)]">ainda</span>.
             </h1>
             <p className="mt-7 text-[1.08rem] sm:text-[1.18rem] text-[var(--fg-dim)] max-w-[34rem] leading-[1.6]">
               BAW é branding feito só para quem é de saúde e bem-estar. Eu defino o seu
